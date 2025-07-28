@@ -319,7 +319,7 @@ padding-top:10px;
 }
 
 .about_section .detail a:hover {
- color-background: white;
+ background: white;
   color: #ffffff;
 }
 
@@ -624,9 +624,6 @@ a:active {
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 15px;
-}
-
-.info_items .item .img-box img {
 }
 
 .info_items .item .detail-box {

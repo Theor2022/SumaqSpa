@@ -1,0 +1,26 @@
+
+body {
+  background-image: url('/images/nature-3082832.jpg');
+  background-size: cover; /* Ajusta la imagen para cubrir toda la pantalla */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-position: center; /* Centra la imagen */
+}
+
+body {
+  color: white; 
+}
+
+.boton-volver {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #2c3e50;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.boton-volver:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
