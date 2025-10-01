@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas - SUMAQ SPA</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">SUMAQ SPA</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4 text-center">Lista de Reservas</h2>
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-primary" id="refreshBtn">Refrescar Reservas</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="reservasTable">
+            <thead class="table-success">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Tratamiento</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se insertarán las reservas -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para cargar y eliminar reservas -->
+<script>
+async function cargarReservas() {
+    const tableBody = document.querySelector("#reservasTable tbody");
+    tableBody.innerHTML = ""; // limpiar tabla
+
+    try {
+        const response = await fetch('/api/reservas/reservas');
+        if (response.ok) {
+            const reservas = await response.json();
+
+            if (reservas.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='8' class='text-center'>No hay reservas</td></tr>";
+                return;
+            }
+
+            reservas.forEach(reserva => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${reserva.id}</td>
+                    <td>${reserva.nombre || ''}</td>
+                    <td>${reserva.correo || ''}</td>
+                    <td>${reserva.telefono || ''}</td>
+                    <td>${reserva.fecha || ''}</td>
+                    <td>${reserva.hora || ''}</td>
+                    <td>${reserva.tratamiento || ''}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarReserva(${reserva.id})">Eliminar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        } else {
+            tableBody.innerHTML = "<tr><td colspan='8' class='text-center text-danger'>Error al cargar reservas</td></tr>";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        tableBody.innerHTML = "<tr><td colspan='8' class='text-center text-danger'>No se pudo conectar al servidor</td></tr>";
+    }
+}
+
+async function eliminarReserva(id) {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta reserva?")) return;
+
+    try {
+        const response = await fetch(`/api/reservas/delete/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("Reserva eliminada exitosamente");
+            cargarReservas(); // refrescar tabla
+        } else if (response.status === 404) {
+            alert("Reserva no encontrada");
+        } else {
+            alert("Ocurrió un error al eliminar la reserva");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("No se pudo conectar al servidor");
+    }
+}
+
+// Evento del botón refrescar
+document.getElementById("refreshBtn").addEventListener("click", cargarReservas);
+
+// Cargar reservas al iniciar
+cargarReservas();
+</script>
+
+</body>
+</html>

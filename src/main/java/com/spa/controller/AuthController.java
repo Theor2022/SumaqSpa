@@ -1,61 +1,44 @@
 package com.spa.controller;
-import com.spa.config.JwtUtil;
+
 import com.spa.dtos.AuthRequest;
-import com.spa.dtos.AuthResponse;
+
+import com.spa.model.Usuario;
+import com.spa.repository.UsuarioRepository;
 import com.spa.services.UsuarioService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final UsuarioRepository usuarioRepository;
+    
     private final UsuarioService usuarioService;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
-
-    public AuthController(UsuarioService usuarioService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+   
+    public AuthController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
         this.usuarioService = usuarioService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
+        this.usuarioRepository = usuarioRepository;
+        
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequest request) {
 
-        try {
-            usuarioService.register(request);
-            return ResponseEntity.ok(Map.of("message", "Usuario registrado correctamente"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error","Usuario ya existente"));
+  @PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    try {
+        boolean authenticated = usuarioService.login(request);
+        if (authenticated) {
+            return ResponseEntity.ok("Credenciales correctas");
+        } else {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
         }
+    } catch (Exception e) {
+         e.printStackTrace(); // esto aparecerá en consola
+        throw e; // deja que el controlador maneje el 500
     }
+}
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
-
-            String token = jwtUtil.generateToken(request.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token));
-
-        } catch (BadCredentialsException e) {
-            // Usuario o contraseña incorrectos
-            return ResponseEntity
-                    .status(401)
-                    .body(Map.of("error", "Usuario o contraseña incorrectos"));
-        } catch (Exception e) {
-            // Error inesperado
-            return ResponseEntity
-                    .status(500)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
-    }
 }
