@@ -11,10 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
         listaCarrito.innerHTML = "";
         let total = 0;
 
-        carrito.forEach(item => {
+        carrito.forEach((item, index) => {
             const li = document.createElement("li");
-            li.textContent = `${item.nombre} - $${item.precio}`;
+            li.className = "d-flex justify-content-between align-items-center mb-1";
+
+            const span = document.createElement("span");
+            span.textContent = `${item.nombre} - $${item.precio}`;
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.textContent = "✖";
+            btnEliminar.className = "btn btn-sm btn-danger ms-2";
+            btnEliminar.addEventListener("click", () => {
+                carrito.splice(index, 1); // eliminar item
+                sessionStorage.setItem("carrito", JSON.stringify(carrito));
+                actualizarCarrito(); // re-renderizar
+            });
+
+            li.appendChild(span);
+            li.appendChild(btnEliminar);
             listaCarrito.appendChild(li);
+
             total += item.precio;
         });
 

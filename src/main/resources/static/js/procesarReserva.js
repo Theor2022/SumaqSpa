@@ -1,28 +1,48 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
-    const contenedorTratamientos = document.getElementById("selected-treatments");
+    let carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
+    const contenedorTratamientos = document.getElementById("cart-items"); // tu ul
     const inputTratamiento = document.getElementById("tratamiento");
     const inputTotal = document.getElementById("total");
 
-    let total = 0;
-    let nombres = [];
+    const renderCarrito = () => {
+        contenedorTratamientos.innerHTML = "";
+        let total = 0;
+        let nombres = [];
 
-    carrito.forEach(item => {
-        const p = document.createElement('p');
-        p.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
-        contenedorTratamientos?.appendChild(p);
-        total += item.precio;
-        nombres.push(item.nombre);
-    });
+        carrito.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.className = "d-flex justify-content-between align-items-center mb-1";
 
-    if (inputTratamiento) inputTratamiento.value = nombres.join(', ');
-    if (inputTotal) inputTotal.value = total.toFixed(2);
+            const span = document.createElement("span");
+            span.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
+
+            const btn = document.createElement("button");
+            btn.textContent = "✖";
+            btn.className = "btn btn-sm btn-danger ms-2";
+            btn.addEventListener("click", () => {
+                carrito.splice(index, 1); // elimina del carrito
+                sessionStorage.setItem('carrito', JSON.stringify(carrito));
+                renderCarrito(); // vuelve a renderizar
+            });
+
+            li.appendChild(span);
+            li.appendChild(btn);
+            contenedorTratamientos.appendChild(li);
+
+            total += item.precio;
+            nombres.push(item.nombre);
+        });
+
+        if (inputTratamiento) inputTratamiento.value = nombres.join(', ');
+        if (inputTotal) inputTotal.value = total.toFixed(2);
+
+        document.getElementById("total-price").textContent = `Total: $${total.toFixed(2)}`;
+    };
+
+    renderCarrito();
 
     const formulario = document.getElementById("formulario");
-    if (!formulario) {
-        console.error("No se encontró el formulario con id 'formulario'.");
-        return;
-    }
+    if (!formulario) return;
 
     formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
