@@ -13,11 +13,16 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("*") // o "http://127.0.0.1:5500" si usas Live Server
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
+                registry.addMapping("/**")
+                        .allowedOrigins(
+                                "http://127.0.0.1:5500", // tu HTML+JS
+                                "http://localhost:5173"   // tu React Vite
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
 }
+
