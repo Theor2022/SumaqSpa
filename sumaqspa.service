@@ -1,0 +1,69 @@
+[Unit]
+Description=SUMAQ SPA - Sistema de Reservas
+After=syslog.target network.target mysql.service
+
+[Service]
+User=sumaqspa
+Group=sumaqspa
+SuccessExitStatus=143
+
+# Directorio de trabajo
+WorkingDirectory=/opt/sumaqspa
+
+# Comando de ejecucion
+ExecStart=/usr/bin/java -Xmx512m -Xms256m \
+    -Dspring.profiles.active=prod \
+    -jar /opt/sumaqspa/sumaqspa.jar
+
+# Logs
+StandardOutput=append:/opt/sumaqspa/logs/app.log
+StandardError=append:/opt/sumaqspa/logs/error.log
+
+# Reiniciar automaticamente si falla
+Restart=always
+RestartSec=10
+
+# Variables de entorno
+Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
+Environment="JWT_SECRET=ChangeThisToAVerySecureRandomKeyInProduction123456789"
+
+# Seguridad
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+
+# ========================================
+# INSTRUCCIONES DE INSTALACION
+# ========================================
+#
+# 1. Copiar este archivo a: /etc/systemd/system/sumaqspa.service
+#
+# 2. Crear usuario del sistema:
+#    sudo useradd -r -s /bin/false sumaqspa
+#
+# 3. Crear directorios:
+#    sudo mkdir -p /opt/sumaqspa/logs
+#    sudo chown -R sumaqspa:sumaqspa /opt/sumaqspa
+#
+# 4. Copiar JAR:
+#    sudo cp target/demo-0.0.1-SNAPSHOT.jar /opt/sumaqspa/sumaqspa.jar
+#
+# 5. Recargar systemd:
+#    sudo systemctl daemon-reload
+#
+# 6. Habilitar inicio automatico:
+#    sudo systemctl enable sumaqspa
+#
+# 7. Iniciar servicio:
+#    sudo systemctl start sumaqspa
+#
+# 8. Verificar estado:
+#    sudo systemctl status sumaqspa
+#
+# 9. Ver logs:
+#    sudo journalctl -u sumaqspa -f
+#
+# ========================================
+

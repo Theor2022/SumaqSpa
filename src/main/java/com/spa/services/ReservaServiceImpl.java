@@ -13,39 +13,36 @@ import java.util.List;
 public class ReservaServiceImpl implements IReservaService {
 
     @Autowired
-    private ReservaRepository repo;
-    @Autowired
     private ReservaRepository reservaRepository;
-
 
     @Override
     public List<Reserva> findAll() {
-
-        return repo.findAll();
-
+        return reservaRepository.findAll();
     }
 
     @Override
     public Reserva findById(Long id) {
-
-        return repo.findById(id).orElse(null);
+        return reservaRepository.findById(id).orElse(null);
     }
 
     @Override
     public Reserva save(Reserva reserva) {
-
-        return repo.save(reserva);
+        return reservaRepository.save(reserva);
     }
 
     @Override
     public void deleteById(Long id) {
-
-        repo.deleteById(id);
-
+        reservaRepository.deleteById(id);
     }
 
     @Override
     public List<LocalTime> findHorasByFecha(LocalDate fecha) {
         return reservaRepository.findHorasByFecha(fecha);
+    }
+
+    @Override
+    public boolean isHorarioOcupado(LocalDate fecha, LocalTime hora) {
+        List<LocalTime> horasOcupadas = reservaRepository.findHorasByFecha(fecha);
+        return horasOcupadas.contains(hora);
     }
 }

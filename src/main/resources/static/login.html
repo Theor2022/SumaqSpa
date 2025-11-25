@@ -6,27 +6,115 @@
     <title>Login - SUMAQ SPA</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-header h2 {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
 <div class="container vh-100 d-flex justify-content-center align-items-center">
-    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+    <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
         <div class="card-body">
-            <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
-            <form id="loginForm">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+            <div class="logo-header">
+                <h2>🌿 SUMAQ SPA</h2>
+            </div>
+
+            <!-- Tabs para Login y Registro -->
+            <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation" style="flex: 1;">
+                    <button class="nav-link active w-100" id="login-tab" data-bs-toggle="tab"
+                            data-bs-target="#login" type="button" role="tab">
+                        Iniciar Sesión
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation" style="flex: 1;">
+                    <button class="nav-link w-100" id="register-tab" data-bs-toggle="tab"
+                            data-bs-target="#register" type="button" role="tab">
+                        Registrarse
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="authTabContent">
+                <!-- Tab de Login -->
+                <div class="tab-pane fade show active" id="login" role="tabpanel">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Ingresa tu usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Ingresa tu contraseña" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Ingresar</button>
+                        </div>
+                        <div class="mt-3 text-center text-danger" id="loginErrorMsg"></div>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+
+                <!-- Tab de Registro -->
+                <div class="tab-pane fade" id="register" role="tabpanel">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="reg_nombre" class="form-label">Nombre Completo *</label>
+                            <input type="text" class="form-control" id="reg_nombre" name="nombre"
+                                   placeholder="Ej: Juan Pérez" required>
+                            <small class="text-muted">Este nombre aparecerá en tus reservas</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reg_username" class="form-label">Nombre de Usuario *</label>
+                            <input type="text" class="form-control" id="reg_username" name="username"
+                                   placeholder="Ej: juanperez" required>
+                            <small class="text-muted">Usarás este usuario para iniciar sesión</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reg_email" class="form-label">Correo Electrónico *</label>
+                            <input type="email" class="form-control" id="reg_email" name="email"
+                                   placeholder="tu@email.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reg_telefono" class="form-label">Teléfono *</label>
+                            <input type="tel" class="form-control" id="reg_telefono" name="telefono"
+                                   placeholder="2612345678" pattern="[0-9]{7,15}" required>
+                            <small class="text-muted">Solo números, mínimo 7 dígitos</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reg_password" class="form-label">Contraseña *</label>
+                            <input type="password" class="form-control" id="reg_password" name="password"
+                                   placeholder="Mínimo 6 caracteres" minlength="6" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reg_password_confirm" class="form-label">Confirmar Contraseña *</label>
+                            <input type="password" class="form-control" id="reg_password_confirm"
+                                   placeholder="Repite tu contraseña" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Registrarse</button>
+                        </div>
+                        <div class="mt-3 text-center text-danger" id="registerErrorMsg"></div>
+                        <div class="mt-2 text-center">
+                            <small class="text-muted">* Campos obligatorios</small>
+                        </div>
+                    </form>
                 </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Ingresar</button>
-                </div>
-                <div class="mt-3 text-center text-danger" id="errorMsg"></div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -34,15 +122,16 @@
 <!-- Bootstrap JS y dependencias -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Script para manejar login -->
+<!-- Script para manejar login y registro -->
 <script>
-const form = document.getElementById('loginForm');
-const errorMsg = document.getElementById('errorMsg');
+// ==================== LOGIN ====================
+const loginForm = document.getElementById('loginForm');
+const loginErrorMsg = document.getElementById('loginErrorMsg');
 
-form.addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
     try {
@@ -53,17 +142,121 @@ form.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            const data = await response.text();
-            alert(data); // mensaje de éxito
-            window.location.href = "reservaslist.html"; // redirige al home
+            const data = await response.json();
+
+            // Guardar información del usuario en localStorage
+            localStorage.setItem('jwt_token', data.token);
+            localStorage.setItem('user_info', JSON.stringify({
+                username: data.username,
+                nombre: data.nombre || data.username,
+                email: data.email,
+                telefono: data.telefono,
+                role: data.role
+            }));
+
+            alert('¡Bienvenido ' + (data.nombre || data.username) + '!');
+
+            // Redirigir según el rol
+            if (data.role === 'ADMIN') {
+                window.location.href = "reservaslist.html";
+            } else {
+                window.location.href = "product.html";
+            }
         } else if (response.status === 401) {
-            errorMsg.textContent = "Usuario o contraseña incorrectos";
+            loginErrorMsg.textContent = "Usuario o contraseña incorrectos";
         } else {
-            errorMsg.textContent = "Ocurrió un error inesperado";
+            const errorText = await response.text();
+            loginErrorMsg.textContent = errorText || "Ocurrió un error inesperado";
         }
     } catch (error) {
         console.error("Error:", error);
-        errorMsg.textContent = "No se pudo conectar con el servidor";
+        loginErrorMsg.textContent = "No se pudo conectar con el servidor";
+    }
+});
+
+// ==================== REGISTRO ====================
+const registerForm = document.getElementById('registerForm');
+const registerErrorMsg = document.getElementById('registerErrorMsg');
+
+registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById('reg_nombre').value.trim();
+    const username = document.getElementById('reg_username').value.trim();
+    const email = document.getElementById('reg_email').value.trim();
+    const telefono = document.getElementById('reg_telefono').value.trim();
+    const password = document.getElementById('reg_password').value;
+    const passwordConfirm = document.getElementById('reg_password_confirm').value;
+
+    // Limpiar mensajes de error previos
+    registerErrorMsg.textContent = "";
+
+    // Validaciones
+    if (password !== passwordConfirm) {
+        registerErrorMsg.textContent = "Las contraseñas no coinciden";
+        return;
+    }
+
+    if (password.length < 6) {
+        registerErrorMsg.textContent = "La contraseña debe tener al menos 6 caracteres";
+        return;
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        registerErrorMsg.textContent = "Ingresa un correo electrónico válido";
+        return;
+    }
+
+    // Validar formato de teléfono
+    const telefonoRegex = /^\d{7,15}$/;
+    if (!telefonoRegex.test(telefono)) {
+        registerErrorMsg.textContent = "El teléfono debe contener solo números (7-15 dígitos)";
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nombre: nombre,
+                username: username,
+                email: email,
+                telefono: telefono,
+                password: password
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            // Guardar información del usuario en localStorage
+            localStorage.setItem('jwt_token', data.token);
+            localStorage.setItem('user_info', JSON.stringify({
+                username: data.username,
+                nombre: data.nombre || nombre,
+                email: data.email,
+                telefono: data.telefono || telefono,
+                role: data.role
+            }));
+
+            alert('¡Registro exitoso! Bienvenido ' + nombre);
+            window.location.href = "product.html";
+        } else {
+            // Obtener el mensaje de error del servidor
+            try {
+                const errorData = await response.json();
+                registerErrorMsg.textContent = errorData.error || "Error al registrar usuario";
+            } catch {
+                const errorText = await response.text();
+                registerErrorMsg.textContent = errorText || "Error al registrar usuario";
+            }
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        registerErrorMsg.textContent = "No se pudo conectar con el servidor";
     }
 });
 </script>

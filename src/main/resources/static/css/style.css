@@ -99,19 +99,20 @@ body {
 }
 
 .hero_area {
-      background-image: url(../images/nature-3082832.jpg);
-
-      background-position: center;
-      background-attachment: fixed;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      text-align: center;
-      color: white;
-      padding: 0 1em;
-      align-content: center;
-      flex-wrap: wrap;
+          background-image: url(../images/nature-3082832.jpg);
+          background-position: center;
+          background-attachment: fixed;
+          position: relative;
+          display: flex;
+          justify-content: flex-end;
+          text-align: center;
+          color: white;
+          padding: 0 1em;
+          align-content: center;
+          flex-wrap: wrap;
+          /* align-items: center; */
+          flex-direction: column;
+          margin-top: -2em;
 }
 
 .hero_content h1 {
@@ -884,6 +885,209 @@ a:active {
   display: block;     /* elimina espacios indeseados debajo de la imagen */
 }
 
+/* Contenedor general fijo */
+.user-bar-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Barra superior */
+.user-bar {
+    background: #28a745;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Cuando no hay usuario */
+.user-bar.no-user {
+    justify-content: flex-end;
+}
+
+/* Botón login */
+.login-btn {
+    background: #1e7e34;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Info de usuario */
+.user-info {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.user-role {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+/* Roles */
+.user-role.admin {
+    background: #ffc107;
+    color: #000;
+}
+
+.user-role.usuario {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.user-email {
+    opacity: 0.9;
+}
+
+/* Sección de acciones */
+.user-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.admin-panel {
+    background: rgba(255,255,255,0.2);
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: white;
+}
+
+/* Botón cerrar sesión */
+.logout-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+
+
+/* ====== BARRA DE USUARIO ====== */
+.user-bar {
+    background: rgb(183 142 94 / 70%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.login-bar {
+    background: rgb(183 142 94 / 70%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 15px;
+    text-align: right;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.user-info {
+    color: white;
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.badge-admin {
+    background: #ffc107;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.badge-user {
+    background: #17a2b8;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.user-email {
+    margin-left: 10px;
+    opacity: 0.9;
+}
+
+.user-actions {
+    padding-right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-admin {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.btn-admin:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-logout {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: #c82333;
+}
+
+.btn-login {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    background: #1e7e34;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-login:hover {
+    background: #155724;
+}
 
 /* end footer section*/
 /*# sourceMappingURL=style.css.map */

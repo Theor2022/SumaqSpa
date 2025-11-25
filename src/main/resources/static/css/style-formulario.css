@@ -198,3 +198,9 @@ input[type="submit"]:hover {
   background-color: var(--primary-dark);
 }
 
+element.style {
+    background: #bb916163;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
