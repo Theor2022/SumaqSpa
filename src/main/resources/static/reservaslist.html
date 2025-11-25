@@ -117,5 +117,13 @@ document.getElementById("refreshBtn").addEventListener("click", cargarReservas);
 cargarReservas();
 </script>
 
+<script src="/js/auth-bar.js"></script>
+<script>
+// Verificar que sea administrador
+document.addEventListener('DOMContentLoaded', () => {
+    requiereAdmin(); // Función de auth-bar.js
+});
+</script>
+
 </body>
 </html>

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // NO eliminar el carrito al inicio - esta línea causaba el problema
+    // sessionStorage.removeItem("carrito"); // ❌ COMENTADO
 
-    sessionStorage.removeItem("carrito");
     const carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
     const botonesAgregar = document.querySelectorAll(".add-to-cart");
     const listaCarrito = document.getElementById("cart-items");
@@ -8,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonReserva = document.getElementById("go-to-reserve");
 
     function actualizarCarrito() {
+        if (!listaCarrito || !precioTotal) return;
+
         listaCarrito.innerHTML = "";
         let total = 0;
 
@@ -16,15 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
             li.className = "d-flex justify-content-between align-items-center mb-1";
 
             const span = document.createElement("span");
-            span.textContent = `${item.nombre} - $${item.precio}`;
+            span.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
 
             const btnEliminar = document.createElement("button");
             btnEliminar.textContent = "✖";
             btnEliminar.className = "btn btn-sm btn-danger ms-2";
             btnEliminar.addEventListener("click", () => {
-                carrito.splice(index, 1); // eliminar item
+                carrito.splice(index, 1);
                 sessionStorage.setItem("carrito", JSON.stringify(carrito));
-                actualizarCarrito(); // re-renderizar
+                actualizarCarrito();
             });
 
             li.appendChild(span);
@@ -34,20 +37,22 @@ document.addEventListener("DOMContentLoaded", () => {
             total += item.precio;
         });
 
-        precioTotal.textContent = `Total: $${total}`;
+        precioTotal.textContent = `Total: $${total.toFixed(2)}`;
         sessionStorage.setItem("carrito", JSON.stringify(carrito));
     }
 
-    botonesAgregar.forEach(boton => {
-        boton.addEventListener("click", () => {
-            const nombre = boton.getAttribute("data-name");
-            const precio = parseFloat(boton.getAttribute("data-price"));
+    if (botonesAgregar) {
+        botonesAgregar.forEach(boton => {
+            boton.addEventListener("click", () => {
+                const nombre = boton.getAttribute("data-name");
+                const precio = parseFloat(boton.getAttribute("data-price"));
 
-            carrito.push({ nombre, precio });
-            actualizarCarrito();
-            alert(`${nombre} fue agregado al carrito.`);
+                carrito.push({ nombre, precio });
+                actualizarCarrito();
+                alert(`${nombre} fue agregado al carrito.`);
+            });
         });
-    });
+    }
 
     if (botonReserva) {
         botonReserva.addEventListener("click", () => {
@@ -55,9 +60,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Debe agregar al menos un tratamiento.");
                 return;
             }
-            window.location.href = "Reservar.html";
+
+            // Verificar autenticación antes de ir a reservar
+            const token = localStorage.getItem('jwt_token');
+            if (!token) {
+                alert("Debe iniciar sesión para realizar una reserva.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            window.location.href = "reservar.html";
         });
     }
 
+    // Actualizar carrito al cargar
     actualizarCarrito();
 });
