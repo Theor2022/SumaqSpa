@@ -1,7 +1,6 @@
 package com.spa.controller;
 
 import com.spa.dtos.AuthRequest;
-import com.spa.dtos.AuthResponse;
 import com.spa.dtos.RegisterRequest;
 import com.spa.model.Usuario;
 import com.spa.services.UsuarioService;

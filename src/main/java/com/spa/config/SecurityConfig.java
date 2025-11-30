@@ -33,44 +33,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        // Permitir todas las páginas HTML específicas
-                        .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/login.html",
-                                "/register.html",
-                                "/contact.html",
-                                "/about.html",
-                                "/product.html",
-                                "/reservar.html",
-                                "/reservaslist.html",
-                                "/confirmacion.html"
-                        ).permitAll()
-
-                        // Permitir recursos estáticos
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
-
-                        // Permitir endpoints de autenticación
-                        .requestMatchers("/api/auth/**").permitAll()
-
-                        // Permitir consulta de horarios disponibles
-                        .requestMatchers("/api/reservas/horarios/**").permitAll()
-
-                        // Permitir crear y listar reservas
-                        .requestMatchers("/api/reservas/reservas").permitAll()
-                        .requestMatchers("/api/reservas").permitAll()
-
-                        // Proteger endpoints de administración
-                        .requestMatchers("/api/reservas/delete/**").permitAll()
-                        .requestMatchers("/api/reservas/update/**").permitAll()
-
-                        // Cualquier otra petición es pública
-                        .anyRequest().permitAll()
-                );
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/index.html", "/login.html").permitAll()
+                .requestMatchers("/api/reservas/**").hasRole("ADMIN")
+                .requestMatchers("/api/treatments/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

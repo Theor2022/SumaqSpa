@@ -29,42 +29,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // Obtener el header Authorization
         String authHeader = request.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            // Extraer el token
             String token = authHeader.substring(7);
             String username = jwtService.extractUsername(token);
 
-            // Si el token es válido y no hay autenticación previa
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                if (jwtService.validateToken(token, username)) {
-                    // Extraer rol
+                boolean valid = jwtService.validateToken(token, username); // usa la firma correcta
+                if (valid) {
                     String role = jwtService.extractRole(token);
-
-                    // Crear autenticación
+                    if (role.startsWith("ROLE_")) role = role.substring(5);
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
                     UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    username,
-                                    null,
-                                    Collections.singletonList(authority)
-                            );
-
+                            new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                    // Establecer en el contexto de seguridad
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         } catch (Exception e) {
-            logger.error("Error al procesar token JWT", e);
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);
