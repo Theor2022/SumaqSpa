@@ -48,10 +48,10 @@ async function actualizarHorariosDisponibles(fecha) {
             generarHorarios();
         } else {
             // Mostrar cuántos horarios están disponibles
-            const mensaje = document.getElementById('horarios-info');
+            const mensaje = document.getElementById('horarios-disponibles-mensaje');
             if (mensaje) {
-                mensaje.textContent = `✅ ${disponibles.length} horarios disponibles`;
-                mensaje.className = 'text-success small mt-1';
+                mensaje.textContent = `Horarios disponibles: ${disponibles.length}`;
+                mensaje.className = 'alert alert-success mt-2';
             }
         }
     } catch (e) {
@@ -120,13 +120,7 @@ function validarFormulario() {
 document.addEventListener('DOMContentLoaded', () => {
     generarHorarios();
 
-    // Agregar contenedor para mensajes de horarios
-    if (selectHora && !document.getElementById('horarios-info')) {
-        const info = document.createElement('div');
-        info.id = 'horarios-info';
-        info.className = 'small text-muted mt-1';
-        selectHora.parentElement.appendChild(info);
-    }
+
 
     if (inputFecha) {
         // Establecer fecha mínima como hoy

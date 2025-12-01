@@ -38,7 +38,9 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/index.html", "/login.html").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/index.html", "/login.html", "/about.html", "/confirmacion.html", "/contact.html", "/product.html", "/reservar.html", "/reservaslist.html").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/reservas").authenticated()
+                .requestMatchers("/api/reservas/horarios").permitAll()
                 .requestMatchers("/api/reservas/**").hasRole("ADMIN")
                 .requestMatchers("/api/treatments/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
