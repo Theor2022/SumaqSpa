@@ -11,6 +11,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
-    @Query("SELECT r.hora FROM Reserva r WHERE r.fecha = :fecha")
+    @Query("SELECT r.hora FROM Reserva r WHERE r.fecha = :fecha AND r.estado = 'ACTIVA'")
     List<LocalTime> findHorasByFecha(@Param("fecha") LocalDate fecha);
+
+    List<Reserva> findByEstado(String estado);
 }

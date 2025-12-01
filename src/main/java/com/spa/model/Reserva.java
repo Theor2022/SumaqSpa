@@ -24,12 +24,15 @@ public class Reserva {
     @Column(name = "hora")
     private LocalTime hora;
 
+    @Column(name = "estado")
+    private String estado = "ACTIVA"; // Por defecto, la reserva está activa
+
     // Constructor vacío para JPA
     public Reserva() {}
 
     // Constructor completo
     public Reserva(Long id, String nombre, String correo, String telefono,
-                   String tratamiento, Double total, LocalDate fecha, LocalTime hora) {
+                   String tratamiento, Double total, LocalDate fecha, LocalTime hora, String estado) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
@@ -38,6 +41,7 @@ public class Reserva {
         this.total = total;
         this.fecha = fecha;
         this.hora = hora;
+        this.estado = estado;
     }
 
     // ----- Getters y Setters -----
@@ -64,4 +68,7 @@ public class Reserva {
 
     public LocalTime getHora() { return hora; }
     public void setHora(LocalTime hora) { this.hora = hora; }
+    
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

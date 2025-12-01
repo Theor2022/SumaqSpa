@@ -73,7 +73,7 @@ public class ReservaController {
      */
     @GetMapping("/reservas")
     public ResponseEntity<List<Reserva>> obtenerReservas() {
-        List<Reserva> reservas = reservaRepository.findAll();
+        List<Reserva> reservas = reservaRepository.findByEstado("ACTIVA");
         return ResponseEntity.ok(reservas);
     }
 
@@ -104,20 +104,23 @@ public class ReservaController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteReserva(@PathVariable Long id) {
         try {
-            if (reservaRepository.existsById(id)) {
-                reservaRepository.deleteById(id);
-                Map<String, String> response = new HashMap<>();
-                response.put("message", "Reserva eliminada exitosamente");
-                return ResponseEntity.ok(response);
-            } else {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Reserva no encontrada");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-            }
+            return reservaRepository.findById(id)
+                    .map(reserva -> {
+                        reserva.setEstado("CANCELADA");
+                        reservaRepository.save(reserva);
+                        Map<String, String> response = new HashMap<>();
+                        response.put("message", "Reserva cancelada exitosamente");
+                        return ResponseEntity.ok(response);
+                    })
+                    .orElseGet(() -> {
+                        Map<String, String> error = new HashMap<>();
+                        error.put("error", "Reserva no encontrada");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+                    });
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error al eliminar la reserva: " + e.getMessage());
+            error.put("error", "Error al cancelar la reserva: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
