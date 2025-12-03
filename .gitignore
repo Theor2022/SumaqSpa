@@ -32,9 +32,23 @@ build/
 ### VS Code ###
 .vscode/
 
-# Archivos de configuración sensibles
-application.properties
-application.yml
+### Environment Variables - NUNCA SUBIR ###
+.env
+.env.local
+.env.*.local
+*.env
 
-# Archivos POM específicos
+### Archivos de configuración con secretos ###
+application-local.properties
+application-secrets.properties
+
+### Logs ###
+logs/
+*.log
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Otros ###
 *.pom
